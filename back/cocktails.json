@@ -1,0 +1,102 @@
+[
+  {
+    "id": "godfather",
+    "tags": { "persona": "고독을 즐기는 늑대", "taste": "🥃 달지 않은 어른의 맛, 묵직한 드라이함", "min_abv": 30, "max_abv": 40 },
+    "result": { "drink": "갓파더 (Godfather)", "comment": "위스키와 아마레또의 묵직함. 고독을 씹어 삼키기엔 이만한 게 없죠.", "ingredients": "위스키, 아마레또 리큐르, 시나몬 스틱" }
+  },
+  {
+    "id": "old_fashioned",
+    "tags": { "persona": "생각이 많은 사색가", "taste": "🥃 달지 않은 어른의 맛, 묵직한 드라이함", "min_abv": 30, "max_abv": 40 },
+    "result": { "drink": "올드 패션드 (Old Fashioned)", "comment": "클래식 중의 클래식. 천천히 녹는 얼음을 보며 생각에 잠기기 좋은 밤입니다.", "ingredients": "버번 위스키, 앙고스투라 비터스, 설탕, 오렌지 필" }
+  },
+  {
+    "id": "martini",
+    "tags": { "persona": "고독을 즐기는 늑대", "taste": "🌿 기분 전환에 딱 맞는 산뜻한 새콤함", "min_abv": 30, "max_abv": 40 },
+    "result": { "drink": "마티니 (Martini)", "comment": "칵테일의 왕. 차갑고 날카로운 진의 향이 머릿속을 차갑게 식혀줄 겁니다.", "ingredients": "드라이 진, 드라이 베르무트, 올리브" }
+  },
+  {
+    "id": "faust",
+    "tags": { "persona": "다 부수고 싶은 반항아", "taste": "🍷 은은하게 취기가 도는 기분 좋은 술맛", "min_abv": 35, "max_abv": 40 },
+    "result": { "drink": "파우스트 (Faust)", "comment": "악마에게 영혼을 팔아서라도 오늘 밤의 스트레스를 날려버리세요. 아주 독하고 붉은 술입니다.", "ingredients": "오버프루프 럼, 크레임 드 카시스, 피치 리큐르" }
+  },
+  {
+    "id": "b52",
+    "tags": { "persona": "다 부수고 싶은 반항아", "taste": "🍫 하루를 녹여버릴 짙은 달콤함", "min_abv": 25, "max_abv": 35 },
+    "result": { "drink": "B-52", "comment": "불을 붙여 한 번에 털어 넣는 폭격기. 짙은 달콤함 뒤에 숨겨진 짜릿한 도수를 경험해 보세요.", "ingredients": "깔루아, 베일리스, 그랑 마르니에" }
+  },
+  {
+    "id": "long_island",
+    "tags": { "persona": "주목받고 싶은 파티광", "taste": "🍷 은은하게 취기가 도는 기분 좋은 술맛", "min_abv": 20, "max_abv": 30 },
+    "result": { "drink": "롱 아일랜드 아이스티 (Long Island Iced Tea)", "comment": "홍차 맛이 난다고 방심하지 마세요. 4가지 기주가 모두 들어간 파티의 주인공입니다.", "ingredients": "진, 럼, 보드카, 데킬라, 트리플 섹, 콜라" }
+  },
+  {
+    "id": "margarita",
+    "tags": { "persona": "생각이 많은 사색가", "taste": "🍋 피로를 깨우는 짜릿한 상큼함", "min_abv": 15, "max_abv": 25 },
+    "result": { "drink": "마가리타 (Margarita)", "comment": "데킬라와 라임의 조화. 잔 테두리의 소금이 짭짤한 눈물 맛을 덮어줄 겁니다.", "ingredients": "데킬라, 트리플 섹, 라임즙, 소금" }
+  },
+  {
+    "id": "cosmopolitan",
+    "tags": { "persona": "몽글몽글 감성 낭만파", "taste": "🌿 기분 전환에 딱 맞는 산뜻한 새콤함", "min_abv": 15, "max_abv": 20 },
+    "result": { "drink": "코스모폴리탄 (Cosmopolitan)", "comment": "도시의 낭만을 담은 핑크빛 칵테일. 우아하고 산뜻하게 하루를 마무리하세요.", "ingredients": "보드카, 크랜베리 주스, 트리플 섹, 라임즙" }
+  },
+  {
+    "id": "jack_coke",
+    "tags": { "persona": "다 부수고 싶은 반항아", "taste": "🫧 꽉 막힌 속을 뚫어줄 시원한 청량감", "min_abv": 10, "max_abv": 15 },
+    "result": { "drink": "잭콕 (Jack & Coke)", "comment": "복잡한 건 싫고 그냥 취하고 싶을 때. 잭 다니엘과 콜라의 타격감 있는 만남입니다.", "ingredients": "잭 다니엘(위스키), 콜라, 얼음" }
+  },
+  {
+    "id": "gin_tonic",
+    "tags": { "persona": "생각이 많은 사색가", "taste": "🫧 꽉 막힌 속을 뚫어줄 시원한 청량감", "min_abv": 10, "max_abv": 15 },
+    "result": { "drink": "진 토닉 (Gin & Tonic)", "comment": "솔잎 향이 나는 진과 쌉싸름한 토닉워터. 복잡한 머릿속을 환기하기 좋습니다.", "ingredients": "드라이 진, 토닉워터, 라임 슬라이스" }
+  },
+  {
+    "id": "mojito",
+    "tags": { "persona": "주목받고 싶은 파티광", "taste": "🫧 꽉 막힌 속을 뚫어줄 시원한 청량감", "min_abv": 10, "max_abv": 15 },
+    "result": { "drink": "모히토 (Mojito)", "comment": "헤밍웨이가 사랑한 술. 짓이긴 민트와 라임이 답답한 속을 뻥 뚫어줍니다.", "ingredients": "화이트 럼, 민트잎, 라임, 설탕, 탄산수" }
+  },
+  {
+    "id": "midori_sour",
+    "tags": { "persona": "침대와 물아일체 귀차니스트", "taste": "🌿 기분 전환에 딱 맞는 산뜻한 새콤함", "min_abv": 10, "max_abv": 15 },
+    "result": { "drink": "미도리 사워 (Midori Sour)", "comment": "초록빛 멜론 리큐르의 상큼함. 뒹굴거리면서 가볍게 마시기 좋습니다.", "ingredients": "미도리(멜론 리큐르), 스윗 앤 사워 믹스, 스프라이트" }
+  },
+  {
+    "id": "peach_crush",
+    "tags": { "persona": "몽글몽글 감성 낭만파", "taste": "🍯 부담 없이 입가에 맴도는 은은한 단맛", "min_abv": 5, "max_abv": 10 },
+    "result": { "drink": "피치 크러시 (Peach Crush)", "comment": "기분 좋게 취하고 싶은 밤, 달콤한 복숭아 향과 크랜베리가 분위기를 살려줍니다.", "ingredients": "피치 리큐르, 스윗 앤 사워 믹스, 크랜베리 주스" }
+  },
+  {
+    "id": "kahlua_milk",
+    "tags": { "persona": "침대와 물아일체 귀차니스트", "taste": "🍫 하루를 녹여버릴 짙은 달콤함", "min_abv": 5, "max_abv": 10 },
+    "result": { "drink": "깔루아 밀크 (Kahlua Milk)", "comment": "복잡한 쉐이킹 없이 우유만 부으면 끝납니다. 침대 위에서 넷플릭스 보며 홀짝이세요.", "ingredients": "깔루아(커피 리큐르), 우유, 얼음" }
+  },
+  {
+    "id": "aperol_spritz",
+    "tags": { "persona": "주목받고 싶은 파티광", "taste": "🍷 은은하게 취기가 도는 기분 좋은 술맛", "min_abv": 5, "max_abv": 10 },
+    "result": { "drink": "아페롤 스프리츠 (Aperol Spritz)", "comment": "기분 좋은 탄산과 쌉싸름한 오렌지 향이 당신의 텐션을 가볍게 끌어올려 줄 겁니다.", "ingredients": "아페롤, 프로세코(스파클링 와인), 탄산수" }
+  },
+  {
+    "id": "pina_colada",
+    "tags": { "persona": "몽글몽글 감성 낭만파", "taste": "🍯 부담 없이 입가에 맴도는 은은한 단맛", "min_abv": 5, "max_abv": 15 },
+    "result": { "drink": "피냐 콜라다 (Pina Colada)", "comment": "코코넛과 파인애플이 만나 열대의 해변으로 데려다줍니다. 달콤하고 부드럽습니다.", "ingredients": "라이트 럼, 파인애플 주스, 코코넛 밀크" }
+  },
+  {
+    "id": "cinderella",
+    "tags": { "persona": "몽글몽글 감성 낭만파", "taste": "🍋 피로를 깨우는 짜릿한 상큼함", "min_abv": 0, "max_abv": 0 },
+    "result": { "drink": "신데렐라 (Cinderella - 논알콜)", "comment": "오렌지와 파인애플의 상큼함. 내일의 일상을 지켜야 하는 낭만파를 위한 음료입니다.", "ingredients": "오렌지 주스, 파인애플 주스, 레몬즙, 탄산수" }
+  },
+  {
+    "id": "virgin_mojito",
+    "tags": { "persona": "침대와 물아일체 귀차니스트", "taste": "🫧 꽉 막힌 속을 뚫어줄 시원한 청량감", "min_abv": 0, "max_abv": 0 },
+    "result": { "drink": "버진 모히토 (Virgin Mojito - 논알콜)", "comment": "알콜은 빼고 민트의 청량함만 남겼습니다. 술 마신 기분만 내고 바로 꿀잠 주무세요.", "ingredients": "민트잎, 라임, 설탕, 탄산수" }
+  },
+  {
+    "id": "shirley_temple",
+    "tags": { "persona": "주목받고 싶은 파티광", "taste": "🍯 부담 없이 입가에 맴도는 은은한 단맛", "min_abv": 0, "max_abv": 0 },
+    "result": { "drink": "셜리 템플 (Shirley Temple - 논알콜)", "comment": "석류 시럽의 달콤함과 진저에일. 알콜 한 방울 없이도 파티 분위기를 내기에 충분합니다.", "ingredients": "그레나딘 시럽(석류), 진저에일, 레몬" }
+  },
+  {
+    "id": "random_secret",
+    "tags": { "persona": "고독을 즐기는 늑대", "taste": "🍫 하루를 녹여버릴 짙은 달콤함", "min_abv": 0, "max_abv": 5 },
+    "result": { "drink": "초코 마티니 (Chocolate Martini)", "comment": "고독한 척하지만 사실은 달콤한 위로가 필요한 당신을 위한 쌉싸름한 초콜릿 한 잔.", "ingredients": "보드카, 초콜릿 리큐르, 코코아 파우더" }
+  }
+]
