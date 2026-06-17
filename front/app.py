@@ -254,7 +254,17 @@ st.markdown("""
     }
 
     .result-actions-spacer {
-        height: 28px;
+        height: 40px;
+    }
+
+    .app-footer {
+        margin-top: 72px;
+        padding: 44px 0 34px;
+        border-top: 1px solid rgba(255, 255, 255, 0.32);
+        color: #AEB4C2;
+        font-size: 1.08rem;
+        font-weight: 800;
+        line-height: 2.4;
     }
 
     @media (max-width: 760px) {
@@ -264,6 +274,12 @@ st.markdown("""
 
         .result-hero {
             padding: 24px;
+        }
+
+        .app-footer {
+            margin-top: 52px;
+            padding-top: 34px;
+            font-size: 0.98rem;
         }
     }
 
@@ -302,6 +318,19 @@ def restore_form_state(payload):
             st.session_state.abv_percent = int(payload["abv"])
         except (TypeError, ValueError):
             st.session_state.abv_percent = 8
+    st.session_state.current_view = "form"
+
+
+def render_footer():
+    st.markdown(
+        """
+        <footer class="app-footer">
+            <div>광운대학교 정보융합학부</div>
+            <div>2022204011 이아란</div>
+        </footer>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def render_result_page():
@@ -372,7 +401,6 @@ def render_result_page():
     with left:
         if st.button("조건 수정하기", use_container_width=True):
             restore_form_state(payload)
-            st.session_state.current_view = "form"
             st.experimental_rerun()
     with right:
         if st.button("처음부터 고르기", use_container_width=True):
@@ -385,6 +413,7 @@ def render_result_page():
 
 if st.session_state.get("current_view") == "result":
     render_result_page()
+    render_footer()
     st.stop()
 
 
@@ -481,7 +510,4 @@ if st.button("바텐더에게 주문하기 🛎️", use_container_width=True):
         except requests.exceptions.RequestException as e:
             st.error("백엔드 서버(FastAPI)와 연결할 수 없습니다. 서버 실행 상태를 확인해주세요.")
 
-st.sidebar.markdown("---")
-st.sidebar.caption("정보")
-st.sidebar.caption("광운대학교 정보융합학부")
-st.sidebar.caption("2022204011 이아란")
+render_footer()
