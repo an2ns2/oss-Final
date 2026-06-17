@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import time
+from html import escape
 
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="심야의 바텐더", page_icon="🍸", layout="centered")
@@ -158,15 +159,110 @@ st.markdown("""
         color: #FF8393;
     }
 
-    /* 결과 출력용 다크 카드 UI 구성 */
-    .result-card {
-        background: linear-gradient(145deg, #1a1c23, #111217);
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 5px 5px 20px #090a0d, -5px -5px 20px #21242d;
-        border: 1px solid #2d303a;
-        margin-top: 30px;
+    .result-page {
+        padding-top: 8px;
     }
+
+    .result-kicker {
+        color: #00FFCC;
+        font-size: 0.92rem;
+        font-weight: 900;
+        letter-spacing: 0;
+        margin-bottom: 8px;
+    }
+
+    .drink-title {
+        margin: 0;
+        color: #FAFAFA;
+        font-size: clamp(2.2rem, 7vw, 4.2rem);
+        line-height: 1.02;
+        font-weight: 950;
+    }
+
+    .drink-subcopy {
+        margin-top: 18px;
+        color: #C9CED8;
+        font-size: 1.08rem;
+        line-height: 1.7;
+    }
+
+    .result-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 204, 0.28);
+        border-radius: 18px;
+        padding: 34px;
+        background:
+            radial-gradient(circle at 18% 20%, rgba(0, 255, 204, 0.22), transparent 34%),
+            radial-gradient(circle at 86% 6%, rgba(255, 82, 105, 0.2), transparent 28%),
+            linear-gradient(145deg, #1a1c23, #101217);
+        box-shadow: 0 0 32px rgba(0, 255, 204, 0.12);
+    }
+
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .result-panel {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.035);
+    }
+
+    .result-panel-label {
+        color: #8D96A8;
+        font-size: 0.8rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .result-panel-value {
+        color: #FAFAFA;
+        font-size: 0.98rem;
+        font-weight: 800;
+        line-height: 1.45;
+    }
+
+    .ingredient-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .ingredient-chip {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 100px;
+        padding: 8px 13px;
+        color: #F0F3F8;
+        background: rgba(255, 255, 255, 0.045);
+        font-weight: 750;
+    }
+
+    .note-block {
+        margin-top: 18px;
+        border-left: 3px solid #00FFCC;
+        padding: 4px 0 4px 16px;
+        color: #DFE4EC;
+        font-size: 1.05rem;
+        line-height: 1.75;
+        font-style: italic;
+    }
+
+    @media (max-width: 760px) {
+        .result-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .result-hero {
+            padding: 24px;
+        }
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -190,6 +286,86 @@ def format_abv_label(abv_percent):
     if abv_percent <= 20:
         return "10~20% (좀 더 취해보자)"
     return "20% 이상 (오늘 밤 다 잊고 취할래)"
+
+
+def render_result_page():
+    result = st.session_state.get("recommendation_result")
+    payload = st.session_state.get("recommendation_payload", {})
+
+    if not result:
+        st.session_state.current_view = "form"
+        st.experimental_rerun()
+
+    drink = escape(result.get("drink", "바텐더의 비밀 레시피"))
+    comment = escape(result.get("comment", "오늘 밤에 어울리는 한 잔을 준비했습니다."))
+    ingredients = [
+        escape(item.strip())
+        for item in result.get("ingredients", "").split(",")
+        if item.strip()
+    ]
+    if ingredients:
+        ingredient_html = "".join(
+            f'<span class="ingredient-chip">{ingredient}</span>'
+            for ingredient in ingredients
+        )
+    else:
+        ingredient_html = '<span class="ingredient-chip">재료 정보 없음</span>'
+
+    persona_label = escape(payload.get("persona", "-"))
+    taste_label = escape(payload.get("taste", "-"))
+    abv_label = escape(payload.get("abv", "-"))
+
+    st.markdown(
+        f"""
+        <div class="result-page">
+            <div class="result-kicker">MIDNIGHT BARTENDER'S PICK</div>
+            <div class="result-hero">
+                <h1 class="drink-title">{drink}</h1>
+                <p class="drink-subcopy">
+                    당신의 밤에 맞춰 고른 한 잔입니다. 아래 노트에서 오늘의 분위기, 맛, 도수를 한 번에 확인해보세요.
+                </p>
+                <div class="note-block">"{comment}"</div>
+            </div>
+            <div class="result-grid">
+                <div class="result-panel">
+                    <div class="result-panel-label">MOOD</div>
+                    <div class="result-panel-value">{persona_label}</div>
+                </div>
+                <div class="result-panel">
+                    <div class="result-panel-label">TASTE</div>
+                    <div class="result-panel-value">{taste_label}</div>
+                </div>
+                <div class="result-panel">
+                    <div class="result-panel-label">ABV</div>
+                    <div class="result-panel-value">{abv_label}</div>
+                </div>
+            </div>
+            <div class="result-panel" style="margin-top: 14px;">
+                <div class="result-panel-label">TASTING NOTE</div>
+                <div class="ingredient-list">{ingredient_html}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    left, right = st.columns([1, 1])
+    with left:
+        if st.button("조건 수정하기", use_container_width=True):
+            st.session_state.current_view = "form"
+            st.experimental_rerun()
+    with right:
+        if st.button("처음부터 고르기", use_container_width=True):
+            for key in ["persona", "taste", "abv_percent", "recommendation_result", "recommendation_payload"]:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.session_state.current_view = "form"
+            st.experimental_rerun()
+
+
+if st.session_state.get("current_view") == "result":
+    render_result_page()
+    st.stop()
 
 
 # 3. 헤더 영역
@@ -275,20 +451,10 @@ if st.button("바텐더에게 주문하기 🛎️", use_container_width=True):
                 
             if response.status_code == 200:
                 result = response.json()
-                
-                # HTML 구조로 카드 UI 렌더링 (바텐더의 쪽지 컨셉)
-                st.markdown(f"""
-                <div class="result-card">
-                    <h3 style="color: #00FFCC; margin-top: 0;">추천 음료: {result['drink']}</h3>
-                    <p style="font-size: 1.1em; line-height: 1.6; font-style: italic; color: #E0E0E0;">
-                        📝 <b>바텐더의 처방 코멘트:</b><br>"{result['comment']}"
-                    </p>
-                    <hr style="border-color: #333; margin: 20px 0;">
-                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0;">
-                        📖 <b>Tasting Note (들어가는 재료):</b><br>{result['ingredients']}
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
+                st.session_state.recommendation_result = result
+                st.session_state.recommendation_payload = payload
+                st.session_state.current_view = "result"
+                st.experimental_rerun()
             else:
                 st.error("바텐더가 레시피를 찾는 데 실패했습니다. HTTP 상태 코드: " + str(response.status_code))
                 
