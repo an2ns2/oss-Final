@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  # 백엔드 서비스 정의
+  back:
+    build: ./back
+    container_name: bartender-back
+    ports:
+      - "8000:8000"
+    restart: always
+
+  # 프론트엔드 서비스 정의
+  front:
+    build: ./front
+    container_name: bartender-front
+    ports:
+      - "8501:8501"
+    depends_on:
+      - back  # 백엔드가 먼저 실행된 후 프론트엔드가 실행되도록 순서 보장
+    restart: always
