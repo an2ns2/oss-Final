@@ -253,6 +253,10 @@ st.markdown("""
         font-style: italic;
     }
 
+    .result-actions-spacer {
+        height: 28px;
+    }
+
     @media (max-width: 760px) {
         .result-grid {
             grid-template-columns: 1fr;
@@ -288,6 +292,18 @@ def format_abv_label(abv_percent):
     return "20% 이상 (오늘 밤 다 잊고 취할래)"
 
 
+def restore_form_state(payload):
+    if payload.get("persona"):
+        st.session_state.persona = payload["persona"]
+    if payload.get("taste"):
+        st.session_state.taste = payload["taste"]
+    if payload.get("abv") is not None:
+        try:
+            st.session_state.abv_percent = int(payload["abv"])
+        except (TypeError, ValueError):
+            st.session_state.abv_percent = 8
+
+
 def render_result_page():
     result = st.session_state.get("recommendation_result")
     payload = st.session_state.get("recommendation_payload", {})
@@ -313,7 +329,8 @@ def render_result_page():
 
     persona_label = escape(payload.get("persona", "-"))
     taste_label = escape(payload.get("taste", "-"))
-    abv_label = escape(str(payload.get("abv", "-")))
+    abv_value = payload.get("abv", "-")
+    abv_label = escape(f"{abv_value}%" if isinstance(abv_value, int) else str(abv_value))
 
     st.markdown(
         f"""
@@ -349,9 +366,12 @@ def render_result_page():
         unsafe_allow_html=True,
     )
 
+    st.markdown('<div class="result-actions-spacer"></div>', unsafe_allow_html=True)
+
     left, right = st.columns([1, 1])
     with left:
         if st.button("조건 수정하기", use_container_width=True):
+            restore_form_state(payload)
             st.session_state.current_view = "form"
             st.experimental_rerun()
     with right:
@@ -460,3 +480,8 @@ if st.button("바텐더에게 주문하기 🛎️", use_container_width=True):
                 
         except requests.exceptions.RequestException as e:
             st.error("백엔드 서버(FastAPI)와 연결할 수 없습니다. 서버 실행 상태를 확인해주세요.")
+
+st.sidebar.markdown("---")
+st.sidebar.caption("정보")
+st.sidebar.caption("광운대학교 정보융합학부")
+st.sidebar.caption("2022204011 이아란")

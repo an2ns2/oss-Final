@@ -46,16 +46,16 @@ COCKTAIL_DB = load_cocktail_db()
 def calculate_similarity(request: CocktailRequest, tags: Dict[str, Any]) -> int:
     score = 0
     
-    # [가중치 3점] 도수(abv)가 DB에 정의된 해당 칵테일의 최소/최대 범위 안에 있는지 확인
-    if tags["min_abv"] <= request.abv <= tags["max_abv"]:
+    # [가중치 3점] 맛(Taste): 칵테일 선택의 최우선 기준
+    if tags["taste"] == request.taste:
         score += 3
         
-    # [가중치 2점] 맛 일치 여부
-    if tags["taste"] == request.taste:
+    # [가중치 2점] 페르소나(Persona): 분위기와 감성을 결정
+    if tags["persona"] == request.persona:
         score += 2
         
-    # [가중치 1점] 성향 일치 여부
-    if tags["persona"] == request.persona:
+    # [가중치 1점] 도수(ABV): 필터링 보조 수단으로 권력 축소
+    if tags["min_abv"] <= request.abv <= tags["max_abv"]:
         score += 1
         
     return score
