@@ -49,13 +49,13 @@ def calculate_similarity(request: CocktailRequest, tags: Dict[str, Any]) -> int:
     # [가중치 3점] 맛(Taste): 칵테일 선택의 최우선 기준
     if tags["taste"] == request.taste:
         score += 3
-        
-    # [가중치 2점] 페르소나(Persona): 분위기와 감성을 결정
-    if tags["persona"] == request.persona:
-        score += 2
-        
-    # [가중치 1점] 도수(ABV): 필터링 보조 수단으로 권력 축소
+    
+     # [가중치 2점] 도수(ABV): 필터링 보조 수단으로 권력 축소
     if tags["min_abv"] <= request.abv <= tags["max_abv"]:
+        score += 2
+
+    # [가중치 1점] 페르소나(Persona): 분위기와 감성을 결정
+    if tags["persona"] == request.persona:
         score += 1
         
     return score
