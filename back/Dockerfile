@@ -8,8 +8,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 백엔드 소스 코드 복사
-COPY main.py .
+# 백엔드 소스 코드 및 JSON 데이터베이스 복사 (여기가 핵심입니다!)
+COPY . .
 
 # FastAPI 기본 포트 개방
 EXPOSE 8000

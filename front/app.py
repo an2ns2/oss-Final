@@ -437,7 +437,7 @@ if st.button("바텐더에게 주문하기 🛎️", use_container_width=True):
         payload = {
             "persona": persona,
             "taste": taste,
-            "abv": abv
+            "abv": abv_percent  
         }
         
         try:
