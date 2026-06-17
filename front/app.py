@@ -313,7 +313,7 @@ def render_result_page():
 
     persona_label = escape(payload.get("persona", "-"))
     taste_label = escape(payload.get("taste", "-"))
-    abv_label = escape(payload.get("abv", "-"))
+    abv_label = escape(str(payload.get("abv", "-")))
 
     st.markdown(
         f"""
