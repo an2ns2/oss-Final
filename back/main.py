@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import Dict, Any
 from fastapi.middleware.cors import CORSMiddleware
+import json
+import os
 
 app = FastAPI(
     title="Midnight Bartender API",
-    description="가중치 기반 칵테일 추천 룰 엔진",
-    version="1.0.0"
+    description="JSON DB 및 가중치 기반 칵테일 추천 엔진",
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -17,106 +19,77 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 1. Pydantic을 활용한 엄격한 데이터 검증 스키마 설계
+# 1. Pydantic 스키마: 도수(abv)를 int형으로 변경
 class CocktailRequest(BaseModel):
     persona: str = Field(..., description="사용자의 현재 감정/성향")
     taste: str = Field(..., description="선호하는 맛")
-    abv: str = Field(..., description="원하는 알코올 도수")
+    abv: int = Field(..., description="원하는 알코올 도수 (0~40)")
 
 class CocktailResponse(BaseModel):
     drink: str
     comment: str
     ingredients: str
 
-# 2. 데이터와 로직의 분리: 칵테일 메타데이터(Knowledge Base) 구축
-# 추후 실제 DB(MySQL, MongoDB)나 AI 모델로 쉽게 전환할 수 있는 구조입니다.
-COCKTAIL_DB: List[Dict[str, Any]] = [
-    {
-        "id": "godfather",
-        "tags": {"persona": "[고독을 즐기는 늑대]", "taste": "☕ 인생의 쓴맛 (드라이함)", "abv": "20% 이상"},
-        "result": {
-            "drink": "갓파더 (Godfather)",
-            "comment": "위스키와 아마레또의 묵직함. 고독을 씹어 삼키기엔 이만한 게 없죠.",
-            "ingredients": "위스키, 아마레또 리큐르, 시나몬 스틱"
-        }
-    },
-    {
-        "id": "kahlua_milk",
-        "tags": {"persona": "[침대와 물아일체 귀차니스트]", "taste": "🍫 스트레스 녹이는 달달함", "abv": "5~10%"},
-        "result": {
-            "drink": "깔루아 밀크 (Kahlua Milk)",
-            "comment": "복잡한 쉐이킹 없이 우유만 부으면 끝납니다. 침대 위에서 넷플릭스 보며 홀짝이세요.",
-            "ingredients": "깔루아(커피 리큐르), 우유, 얼음"
-        }
-    },
-    {
-        "id": "cinderella",
-        "tags": {"persona": "[몽글몽글 감성 낭만파]", "taste": "🍋 침이 고이는 상큼함", "abv": "0~5%"},
-        "result": {
-            "drink": "신데렐라 (Cinderella - 논알콜)",
-            "comment": "오렌지와 파인애플의 상큼함. 내일의 일상을 지켜야 하는 낭만파를 위한 완벽한 음료입니다.",
-            "ingredients": "오렌지 주스, 파인애플 주스, 레몬즙, 탄산수"
-        }
-    },
-    {
-        "id": "faust",
-        "tags": {"persona": "[다 부수고 싶은 반항아]", "taste": "☕ 인생의 쓴맛 (드라이함)", "abv": "20% 이상"},
-        "result": {
-            "drink": "파우스트 (Faust)",
-            "comment": "악마에게 영혼을 팔아서라도 오늘 밤의 스트레스를 날려버리세요. 아주 독하고 붉은 술입니다.",
-            "ingredients": "오버프루프 럼, 크레임 드 카시스, 피치 리큐르"
-        }
-    },
-    {
-        "id": "aperol_spritz",
-        "tags": {"persona": "[주목받고 싶은 파티광]", "taste": "스파클링", "abv": "5~10%"},
-        "result": {
-            "drink": "아페롤 스프리츠 (Aperol Spritz)",
-            "comment": "기분 좋은 탄산과 쌉싸름한 오렌지 향이 당신의 기분을 가볍게 끌어올려 줄 겁니다.",
-            "ingredients": "아페롤, 프로세코(스파클링 와인), 탄산수, 오렌지 슬라이스"
-        }
-    }
-]
+# 2. JSON 데이터베이스 로드 함수
+def load_cocktail_db():
+    # 파일 경로를 안전하게 구성하여 JSON 파일을 읽어옴
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    json_path = os.path.join(current_dir, "cocktails.json")
+    
+    with open(json_path, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+COCKTAIL_DB = load_cocktail_db()
 
 # 3. 비즈니스 로직: 가중치 기반 스코어링 알고리즘
-def calculate_similarity(request: CocktailRequest, tags: Dict[str, str]) -> int:
-    """사용자 입력과 칵테일 태그 간의 유사도 점수를 계산합니다."""
+def calculate_similarity(request: CocktailRequest, tags: Dict[str, Any]) -> int:
     score = 0
-    # 도수(abv)는 칵테일 선택의 절대적 기준이므로 가장 높은 가중치 부여
-    if tags["abv"] in request.abv:
+    
+    # [가중치 3점] 도수(abv)가 DB에 정의된 해당 칵테일의 최소/최대 범위 안에 있는지 확인
+    if tags["min_abv"] <= request.abv <= tags["max_abv"]:
         score += 3
-    # 맛(taste)은 중요한 기준이므로 중간 가중치
-    if tags["taste"] in request.taste:
+        
+    # [가중치 2점] 맛 일치 여부
+    if tags["taste"] == request.taste:
         score += 2
-    # 페르소나는 보조 기준
-    if tags["persona"] in request.persona:
+        
+    # [가중치 1점] 성향 일치 여부
+    if tags["persona"] == request.persona:
         score += 1
         
     return score
 
 @app.post("/recommend", response_model=CocktailResponse)
 def recommend_cocktail(request: CocktailRequest):
-    best_match = None
+    best_matches = []  # 단일 딕셔너리가 아닌, 최고점 후보들을 담을 '리스트'로 변경
     highest_score = -1
 
-    # DB를 순회하며 사용자 입력과 가장 유사도가 높은 칵테일을 탐색
+    # DB 순회 탐색
     for cocktail in COCKTAIL_DB:
         score = calculate_similarity(request, cocktail["tags"])
         
+        # 1. 기존 최고점보다 높은 점수를 발견한 경우: 후보군 리스트를 초기화하고 새로 담음
         if score > highest_score:
             highest_score = score
-            best_match = cocktail["result"]
+            best_matches = [cocktail["result"]]
+            
+        # 2. [타이브레이킹 핵심] 기존 최고점과 동점인 경우: 후보군 리스트에 추가 (버리지 않음)
+        elif score == highest_score:
+            best_matches.append(cocktail["result"])
 
-    # 매칭 점수가 너무 낮거나 예외 상황일 경우의 Fallback (기본값)
-    if highest_score == 0 or not best_match:
+    # 예외 처리: 매칭되는 조건이 아예 없을 경우 (highest_score가 0인 경우도 방어)
+    if highest_score == 0 or not best_matches:
         return CocktailResponse(
             drink="바텐더의 비밀 레시피",
             comment="당신의 복잡한 마음을 위로할 특별한 한 잔입니다. 오늘은 제가 이끄는 대로 드셔보시죠.",
             ingredients="비밀 재료, 약간의 위로, 얼음"
         )
 
-    return CocktailResponse(**best_match)
+    # 3. 최고점 후보군 중에서 무작위로 하나를 최종 선택하여 반환
+    final_choice = random.choice(best_matches)
+
+    return CocktailResponse(**final_choice)
 
 @app.get("/")
 def read_root():
-    return {"status": "ok", "message": "Midnight Bartender 추천 엔진이 가동 중입니다."}
+    return {"status": "ok", "message": f"DB Loaded. {len(COCKTAIL_DB)} cocktails ready."}
